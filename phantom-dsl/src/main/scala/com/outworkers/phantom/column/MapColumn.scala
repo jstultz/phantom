@@ -61,13 +61,13 @@ private[phantom] abstract class AbstractMapColumn[
 class MapColumn[Owner <: CassandraTable[Owner, Record], Record, K : Primitive, V : Primitive](table: CassandraTable[Owner, Record])
     extends AbstractMapColumn[Owner, Record, K, V](table) with PrimitiveCollectionValue[V] {
 
-  val keyPrimitive = Primitive[K]
+  private[this] val keyPrimitive = Primitive[K]
 
   override def keyAsCql(v: K): String = keyPrimitive.asCql(v)
 
-  override val valuePrimitive = Primitive[V]
+  override val valuePrimitive: Primitive[V] = Primitive[V]
 
-  override val cassandraType = QueryBuilder.Collections.mapType(
+  override val cassandraType: String = QueryBuilder.Collections.mapType(
     keyPrimitive.cassandraType,
     valuePrimitive.cassandraType
   ).queryString
