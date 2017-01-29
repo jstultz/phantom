@@ -129,11 +129,10 @@ class MapColumn[Owner <: CassandraTable[Owner, Record], Record, K : Primitive, V
     if (r.isNull(name)) {
       Success(Map.empty[K, V])
     } else {
-      Try(
-        r.getMap(name, keyPrimitive.clz, valuePrimitive.clz).asScala.toMap map {
-          case (k, v) => keyPrimitive.extract(k) -> valuePrimitive.extract(v)
-        }
-      )
+      //parseMap(r.getBytes(name), ProtocolVersion.V4)
+      Try(r.getMap(name, keyPrimitive.clz, valuePrimitive.clz).asScala.toMap map {
+        case (k, v) => keyPrimitive.extract(k) -> valuePrimitive.extract(v)
+      })
     }
   }
 

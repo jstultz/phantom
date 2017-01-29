@@ -23,9 +23,8 @@ import org.scalatest.FlatSpec
 
 class TypeRestrictionsTest extends FlatSpec with SerializationTest {
 
-  val Primitives = TestDatabase.primitives
-  val tsTable = TestDatabase.timeSeriesTable
-
+  private[this] val Primitives = TestDatabase.primitives
+  private[this] val tsTable = TestDatabase.timeSeriesTable
 
   it should "allow using a correct type for a value method" in {
     "Primitives.insert.value(_.boolean, true)" should compile

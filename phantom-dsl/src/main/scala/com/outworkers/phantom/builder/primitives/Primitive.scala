@@ -15,9 +15,10 @@
  */
 package com.outworkers.phantom.builder.primitives
 
+import java.nio.ByteBuffer
 import java.util.Date
 
-import com.datastax.driver.core.{GettableByIndexData, GettableByNameData, GettableData, LocalDate}
+import com.datastax.driver.core._
 import org.joda.time.DateTime
 
 import scala.annotation.implicitNotFound
@@ -37,6 +38,8 @@ private[phantom] object DateSerializer {
 
 @implicitNotFound(msg = "Type ${RR} must be a pre-defined Cassandra primitive.")
 abstract class Primitive[RR] {
+
+  def deserialize(source: ByteBuffer, version: ProtocolVersion): RR
 
   /**
     * A way of maintaining compatibility with the underlying Java driver.
@@ -148,6 +151,10 @@ object Primitive {
       override def fromString(value: String): Target = from(source.fromString(value))
 
       override def clz: Class[source.PrimitiveType] = source.clz
+
+      override def deserialize(buffer: ByteBuffer, version: ProtocolVersion): Target = {
+        from(source.deserialize(buffer, version))
+      }
     }
   }
 

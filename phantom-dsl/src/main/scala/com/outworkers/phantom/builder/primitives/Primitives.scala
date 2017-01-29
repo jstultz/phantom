@@ -20,7 +20,8 @@ import java.nio.ByteBuffer
 import java.util.{Date, UUID}
 
 import com.datastax.driver.core.utils.Bytes
-import com.datastax.driver.core.{GettableByIndexData, GettableByNameData, GettableData, LocalDate}
+import com.datastax.driver.core._
+import com.google.common.base.Charsets
 import com.outworkers.phantom.builder.QueryBuilder
 import com.outworkers.phantom.builder.query.CQLQuery
 import com.outworkers.phantom.builder.syntax.CQLSyntax
@@ -32,6 +33,8 @@ import scala.util.Try
 object Primitives {
 
     class StringPrimitive extends Primitive[String] {
+
+      private[this] val charset = Charsets.UTF_8
 
       override type PrimitiveType = java.lang.String
 
@@ -50,6 +53,12 @@ object Primitives {
       }
 
       override def clz: Class[String] = classOf[String]
+
+      override def deserialize(source: ByteBuffer, version: ProtocolVersion): String = {
+        if (Option(source).isEmpty) None.orNull
+        if (source.remaining == 0) ""
+        new String(Bytes.getArray(source), charset)
+      }
     }
 
     class IntPrimitive extends Primitive[Int] {
