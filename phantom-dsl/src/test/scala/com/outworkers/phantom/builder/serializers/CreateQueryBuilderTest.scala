@@ -17,8 +17,6 @@ package com.outworkers.phantom.builder.serializers
 
 import java.util.concurrent.TimeUnit
 
-import com.twitter.conversions.storage._
-import com.twitter.util.{Duration => TwitterDuration}
 import com.outworkers.phantom.builder.QueryBuilder
 import com.outworkers.phantom.builder.query.SerializationTest
 import com.outworkers.phantom.builder.syntax.CQLSyntax
@@ -161,6 +159,13 @@ class CreateQueryBuilderTest extends FreeSpec with Matchers with SerializationTe
 
         qb shouldEqual s"$root WITH compaction = {'class'" +
           ": 'TimeWindowCompactionStrategy', 'compaction_window_unit': 'DAYS', 'compaction_window_size': 5, 'timestamp_resolution': 'MILLISECONDS'}"
+      }
+    }
+
+    "should allow specifying a storage mechanism" - {
+      "should allow specifying a compact storage mechanism" in {
+        val qb = BasicTable.create.`with`(Storage.CompactStorage).qb.queryString
+        qb shouldEqual s"$root WITH COMPACT STORAGE"
       }
     }
 

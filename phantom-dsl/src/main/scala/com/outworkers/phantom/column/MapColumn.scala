@@ -76,7 +76,6 @@ class MapColumn[Owner <: CassandraTable[Owner, Record], Record, K : Primitive, V
     valuePrimitive.cassandraType
   ).queryString
 
-  /*
   protected[this] def parseMap(bytes: ByteBuffer, protocolVersion: ProtocolVersion)(
     implicit cbf: CanBuildFrom[Nothing, (K, V), Map[K, V]]
   ): Try[Map[K, V]] = {
@@ -110,7 +109,7 @@ class MapColumn[Owner <: CassandraTable[Owner, Record], Record, K : Primitive, V
         throw new InvalidTypeException("Not enough bytes to deserialize a map", e)
       }
     }
-  }*/
+  }
 
   override def qb: CQLQuery = {
     if (shouldFreeze) {
