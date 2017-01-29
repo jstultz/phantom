@@ -17,10 +17,12 @@ package com.outworkers.phantom.builder.primitives
 
 import java.net.InetAddress
 import java.nio.ByteBuffer
+import java.nio.charset.Charset
 import java.util.{Date, UUID}
 
 import com.datastax.driver.core.utils.Bytes
 import com.datastax.driver.core._
+import com.datastax.driver.core.exceptions.InvalidTypeException
 import com.google.common.base.Charsets
 import com.outworkers.phantom.builder.QueryBuilder
 import com.outworkers.phantom.builder.query.CQLQuery
@@ -31,10 +33,9 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 object Primitives {
-
     class StringPrimitive extends Primitive[String] {
 
-      private[this] val charset = Charsets.UTF_8
+      private[this] val charset = Charset.forName("UTF-8")
 
       override type PrimitiveType = java.lang.String
 
@@ -71,8 +72,8 @@ object Primitives {
 
       override def fromString(value: String): Int = value.toInt
 
-      override def fromRow(column: String, row: GettableByNameData): Try[Int] = nullCheck(column, row) {
-        _.getInt(column)
+      override def fromRow(column: String, row: GettableByNameData): Try[Int] = {
+        nullCheck(column, row)(_.getInt(column))
       }
 
       override def fromRow(index: Int, row: GettableByIndexData): Try[Int] = {
@@ -80,6 +81,10 @@ object Primitives {
       }
 
       override def clz: Class[java.lang.Integer] = classOf[java.lang.Integer]
+
+      override def deserialize(source: ByteBuffer, version: ProtocolVersion): Int = {
+
+      }
     }
 
     class SmallIntPrimitive extends Primitive[Short] {
@@ -147,6 +152,8 @@ object Primitives {
 
     class LongPrimitive extends Primitive[Long] {
 
+      private[this] val loggerByteLength = 8
+
       override type PrimitiveType = java.lang.Long
 
       def asCql(value: Long): String = value.toString
@@ -164,6 +171,18 @@ object Primitives {
       }
 
       override def clz: Class[java.lang.Long] = classOf[java.lang.Long]
+
+      def serialize(value: Long, protocolVersion: ProtocolVersion): ByteBuffer = {
+        val bb = ByteBuffer.allocate(loggerByteLength)
+        bb.putLong(0, value)
+        bb
+      }
+
+      def deserialize(bytes: ByteBuffer, protocolVersion: ProtocolVersion): Long = {
+        if (bytes == null || bytes.remaining == 0) 0L
+        if (bytes.remaining != 8) throw new InvalidTypeException("Invalid 64-bits long value, expecting 8 bytes but got " + bytes.remaining)
+        bytes.getLong(bytes.position)
+      }
     }
 
     class FloatPrimitive extends Primitive[Float] {
@@ -206,6 +225,14 @@ object Primitives {
       }
 
       override def clz: Class[UUID] = classOf[UUID]
+
+      def deserialize(bytes: ByteBuffer, protocolVersion: ProtocolVersion): UUID = {
+        if (Option(bytes).isEmpty || bytes.remaining == 0) {
+          None.orNull
+        } else {
+          new UUID(bytes.getLong(bytes.position), bytes.getLong(bytes.position + 8))
+        }
+      }
     }
 
     class DateIsPrimitive extends Primitive[Date] {
@@ -449,7 +476,7 @@ object Primitives {
   def list[T : Primitive](): Primitive[List[T]] = {
     new Primitive[List[T]] {
 
-      val ev = implicitly[Primitive[T]]
+      private[this] val ev = implicitly[Primitive[T]]
 
       override def fromRow(column: String, row: GettableByNameData): Try[List[T]] = {
         Try(row.getList(column, ev.clz).asScala.toList.map(ev.extract))
@@ -478,7 +505,7 @@ object Primitives {
   def set[T : Primitive](): Primitive[Set[T]] = {
     new Primitive[Set[T]] {
 
-      val ev = implicitly[Primitive[T]]
+      private[this] val ev = implicitly[Primitive[T]]
 
       override def fromRow(column: String, row: GettableByNameData): Try[Set[T]] = {
         Try(row.getSet(column, ev.clz).asScala.toSet.map(ev.extract))
@@ -505,8 +532,8 @@ object Primitives {
   def map[K : Primitive, V : Primitive](): Primitive[Map[K, V]] = {
     new Primitive[Map[K, V]] {
 
-      val keyPrimitive = implicitly[Primitive[K]]
-      val valuePrimitive = implicitly[Primitive[V]]
+      private[this] val keyPrimitive = implicitly[Primitive[K]]
+      private[this] val valuePrimitive = implicitly[Primitive[V]]
 
       override def fromRow(column: String, row: GettableByNameData): Try[Map[K, V]] = {
         Try {

@@ -80,31 +80,25 @@ class MapColumn[Owner <: CassandraTable[Owner, Record], Record, K : Primitive, V
     implicit cbf: CanBuildFrom[Nothing, (K, V), Map[K, V]]
   ): Try[Map[K, V]] = {
 
-    if (bytes == null || bytes.remaining == 0) Success(cbf().result())
+    if (Option(bytes).isEmpty || bytes.remaining == 0) Success(cbf().result())
 
-    try
+    try {
       val input = bytes.duplicate
       val n = CodecUtils.readSize(input, protocolVersion)
       val builder = cbf()
       builder.sizeHint(n)
 
-      val m = builder
       var i = 0
       while (i < n) {
-        {
-          val kbb = CodecUtils.readValue(input, protocolVersion)
-          val vbb = CodecUtils.readValue(input, protocolVersion)
+        val kbb = CodecUtils.readValue(input, protocolVersion)
+        val vbb = CodecUtils.readValue(input, protocolVersion)
 
-          m += (keyCodec.deserialize(kbb, protocolVersion), valueCodec.deserialize(vbb, protocolVersion))
-        }
-        {
-          i += 1;
-          i - 1
-        }
+        builder += keyPrimitive.deserialize(kbb, protocolVersion) -> valuePrimitive.deserialize(vbb, protocolVersion)
+        i += 1
+        i - 1
       }
-      m
-
-    catch {
+      Success(builder.result())
+    } catch {
       case e: BufferUnderflowException => {
         throw new InvalidTypeException("Not enough bytes to deserialize a map", e)
       }
@@ -129,10 +123,7 @@ class MapColumn[Owner <: CassandraTable[Owner, Record], Record, K : Primitive, V
     if (r.isNull(name)) {
       Success(Map.empty[K, V])
     } else {
-      //parseMap(r.getBytes(name), ProtocolVersion.V4)
-      Try(r.getMap(name, keyPrimitive.clz, valuePrimitive.clz).asScala.toMap map {
-        case (k, v) => keyPrimitive.extract(k) -> valuePrimitive.extract(v)
-      })
+      parseMap(r.getBytes(name), ProtocolVersion.V4)
     }
   }
 
