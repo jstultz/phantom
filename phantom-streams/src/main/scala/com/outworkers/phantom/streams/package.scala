@@ -56,7 +56,6 @@ package object streams {
    */
   implicit class StreamedCassandraTable[CT <: CassandraTable[CT, T], T](val ct: CassandraTable[CT, T]) extends AnyVal {
 
-
     /**
      * Gets a reactive streams [[org.reactivestreams.Subscriber]] with
      * batching capabilities for some phantom [[CassandraTable]]. This
