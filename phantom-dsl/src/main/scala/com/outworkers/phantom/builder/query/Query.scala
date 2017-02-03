@@ -96,7 +96,7 @@ abstract class Query[
     if (session.protocolConsistency) {
       create[Table, Record, Limit, Order, Specified, Chain, PS](
         table,
-        CQLQuery.empty,
+        qb,
         row,
         usingPart,
         options.consistencyLevel_=(level)
@@ -104,7 +104,7 @@ abstract class Query[
     } else {
       create[Table, Record, Limit, Order, Specified, Chain, PS](
         table,
-        CQLQuery.empty,
+        qb,
         row,
         usingPart append QueryBuilder.consistencyLevel(level.toString),
         options
@@ -133,10 +133,8 @@ abstract class Query[
     RR,
     HL <: HList,
     Out <: HList
-  ](
-    condition: Table => QueryCondition[HL]
-  )(implicit
-    ev: Chain =:= Unchainned,
+  ](condition: Table => QueryCondition[HL])(
+    implicit ev: Chain =:= Unchainned,
     prepend: Prepend.Aux[HL, PS, Out]
   ): QueryType[Table, Record, Limit, Order, Status, Chainned, Out]
 
@@ -150,10 +148,8 @@ abstract class Query[
     RR,
     HL <: HList,
     Out <: HList
-  ](
-    condition: Table => QueryCondition[HL]
-  )(implicit
-    ev: Chain =:= Chainned,
+  ](condition: Table => QueryCondition[HL])(
+    implicit ev: Chain =:= Chainned,
     prepend: Prepend.Aux[HL, PS, Out]
   ): QueryType[Table, Record, Limit, Order, Status, Chainned, Out]
 
