@@ -40,4 +40,14 @@ trait SessionAugmenterImplicits {
   implicit class RichSession(val session: Session) extends SessionAugmenter
 }
 
+/**
+  * Trait that allows the decoupling between the connectors framewrok
+  * and the rest of the phantom eco-system.
+  * Keyspace creation queries will allow users to use the keyspace
+  * creation DSL to create initalisation that can be passed to connectors.
+  */
+trait KeyspaceCreationQuery {
+  def value: String
+}
+
 case class KeySpace(name: String)
