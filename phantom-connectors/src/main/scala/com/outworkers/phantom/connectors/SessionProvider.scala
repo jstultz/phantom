@@ -15,7 +15,8 @@
  */
 package com.outworkers.phantom.connectors
 
-import com.datastax.driver.core.{ Cluster, Session }
+import com.datastax.driver.core.{Cluster, Session}
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * Responsible for providing Session instances of the
@@ -23,6 +24,8 @@ import com.datastax.driver.core.{ Cluster, Session }
  * in the same cluster.
  */
 trait SessionProvider {
+
+  def logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   /**
    * The Cassandra driver's Cluster instance

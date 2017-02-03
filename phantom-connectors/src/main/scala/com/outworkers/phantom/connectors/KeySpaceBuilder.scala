@@ -74,4 +74,5 @@ class KeySpaceBuilder(clusterBuilder: ClusterBuilder) {
     query: (Session, KeySpace) => String
   ): CassandraConnection = {
     new CassandraConnection(name, clusterBuilder, true, Some(query))
-  }}
+  }
+}

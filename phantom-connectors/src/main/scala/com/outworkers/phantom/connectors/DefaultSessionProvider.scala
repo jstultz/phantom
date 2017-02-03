@@ -36,9 +36,7 @@ class DefaultSessionProvider(
   errorHandler: Throwable => Throwable = identity
 ) extends SessionProvider {
 
-  val logger = LoggerFactory.getLogger(this.getClass)
-
-  val cluster: Cluster = builder(Cluster.builder).build
+  override val cluster: Cluster = builder(Cluster.builder).build
 
   def defaultKeyspaceCreationQuery(session: Session, keySpace: String): String = {
     s"CREATE KEYSPACE IF NOT EXISTS $keySpace WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};"
@@ -78,5 +76,5 @@ class DefaultSessionProvider(
     }
   }
 
-  val session: Session = createSession(space.name)
+  override val session: Session = createSession(space.name)
 }
