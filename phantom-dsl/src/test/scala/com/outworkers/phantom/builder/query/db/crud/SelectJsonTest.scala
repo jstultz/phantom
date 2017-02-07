@@ -21,6 +21,8 @@ import com.outworkers.phantom.dsl._
 import com.outworkers.phantom.tables._
 import com.outworkers.util.testing._
 import org.json4s.native.JsonParser
+import shapeless._
+import syntax.std.tuple._
 
 class SelectJsonTest extends PhantomSuite {
   override def beforeAll(): Unit = {
@@ -32,8 +34,8 @@ class SelectJsonTest extends PhantomSuite {
     val row = gen[Primitive]
 
     val chain = for {
-      store <- TestDatabase.primitives.store(row).future()
-      b <- TestDatabase.primitives.select.json().where(_.pkey eqs row.pkey).one
+      store <- database.primitives.store(row).future()
+      b <- database.primitives.select.json().where(_.pkey eqs row.pkey).one
     } yield b
 
 
@@ -52,11 +54,11 @@ class SelectJsonTest extends PhantomSuite {
 
   "A JSON selection clause" should "8 columns as JSON" in {
     val row = gen[Primitive]
-    val expected = (row.pkey, row.long, row.boolean, row.bDecimal, row.double, row.float, row.inet, row.int)
+    val expected = row.take(Nat._8)
 
     val chain = for {
-      store <- TestDatabase.primitives.store(row).future()
-      get <- TestDatabase.primitives.select(_.pkey, _.long, _.boolean, _.bDecimal, _.double, _.float, _.inet, _.int)
+      store <- database.primitives.store(row).future()
+      get <- database.primitives.select(_.pkey, _.long, _.boolean, _.bDecimal, _.double, _.float, _.inet, _.int)
         .json()
         .where(_.pkey eqs row.pkey).one()
     } yield get
