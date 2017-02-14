@@ -1,34 +1,76 @@
-phantom [![Build Status](https://travis-ci.org/outworkers/phantom.svg?branch=develop)](https://travis-ci.org/outworkers/phantom) [![Coverage Status](https://coveralls.io/repos/outworkers/phantom/badge.svg)](https://coveralls.io/r/outworkers/phantom) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.websudos/phantom-dsl_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.websudos/phantom-dsl_2.11) [![Bintray](https://api.bintray.com/packages/websudos/oss-releases/phantom/images/download.svg) ](https://bintray.com/websudos/oss-releases/phantom/_latestVersion) [![Codacy Rating](https://api.codacy.com/project/badge/grade/25bee222a7d142ff8151e6ceb39151b4)](https://www.codacy.com/app/flavian/phantom_2) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/outworkers/phantom?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-==================================================================================================
+phantom
+[![Build Status](https://travis-ci.org/outworkers/phantom.svg?branch=develop)](https://travis-ci.org/outworkers/phantom?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/outworkers/phantom/badge.svg?branch=develop)](https://coveralls.io/github/outworkers/phantom?branch=develop)  [![Codacy Rating](https://api.codacy.com/project/badge/grade/25bee222a7d142ff8151e6ceb39151b4)](https://www.codacy.com/app/flavian/phantom_2) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.outworkers/phantom-dsl_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.outworkers/phantom-dsl_2.11) [![Bintray](https://api.bintray.com/packages/outworkers/oss-releases/phantom-dsl/images/download.svg) ](https://bintray.com/outworkers/oss-releases/phantom-dsl/_latestVersion) [![ScalaDoc](http://javadoc-badge.appspot.com/com.outworkers/phantom-dsl_2.11.svg?label=scaladoc)](http://javadoc-badge.appspot.com/com.outworkers/phantom-dsl_2.11) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/outworkers/phantom?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
 
-Reactive type-safe Scala DSL for Cassandra
+Reactive type-safe Scala driver for Apache Cassandra/Datastax Enterprise
 
-To stay up-to-date with our latest releases and news, follow us on Twitter: [@outworkers_uk](https://twitter.com/outworkers_uk).
+To stay up-to-date with our latest releases and news, follow us on Twitter: [@outworkers](https://twitter.com/outworkers_uk).
 
-If you use phantom, please consider adding your company to our list of adopters.
-phantom is and will always be [freeware](https://en.wikipedia.org/wiki/Freeware), but the more adopters our projects have, the more people from our company will actively work to make them better.
+If you use phantom, please consider adding your company to our list of adopters. Phantom is and will always be open source, but the more adopters our projects have, the more people from our company will actively work to make them better.
 
 ![phantom](https://s3-eu-west-1.amazonaws.com/websudos/oss/logos/phantom.png "Outworkers Phantom")
 
+Migrating to phantom 2.0.x series
+=================================
+
+The new series of phantom introduces several key backwards incompatible changes with previous versions.
+ This was done to obtain massive performance boosts and to thoroughly improve user experience with
+ phantom.
+
+Read the [MIGRATION GUIDE](docs/migrate.md) for more information on how to upgrade.
+
+
+Available modules
+=================
+
+This is a table of the available modules for the various Scala versions. Not all modules are available for all versions just yet, and this is because certain dependencies have yet to be published for Scala 2.12.
+
+#### Phantom OSS
+
+| Module name           | Scala 2.10.x        | Scala 2.11.x      | Scala 2.12.0      |
+| ------------          | ------------------- | ------------------| ----------------- |
+| phantom-connectors    | <span>yes</span>    | <span>yes</span> | <span>yes</span>  |
+| phantom-dsl           | <span>yes</span>    | <span>yes</span> | <span>yes</span>  |
+| phantom-jdk8          | <span>yes</span>    | <span>yes</span> | <span>yes</span>  |
+| phantom-sbt           | <span>yes</span>    | <span>no</span>  | <span>no</span>   |
+| phantom-example       | <span>yes</span>    | <span>yes</span> | <span>no</span>   |
+| phantom-thrift        | <span>yes</span>    | <span>yes</span> | <span>no</span>   |
+| phantom-finagle       | <span>yes</span>    | <span>yes</span> | <span>no</span>   |
+| phantom-streams       | <span>yes</span>    | <span>yes</span> | <span>no</span>   |
+
+#### Phantom Pro subscription edition
+
+Modules marked with "x" are still in beta or pre-publishing mode.
+
+| Module name           | Scala 2.10.x        | Scala 2.11.x      | Scala 2.12.0      |
+| ------------          | ------------------- | ------------------| ----------------- |
+| phantom-dse           | <span>yes</span>    | <span>yes</span>  | <span>yes</span>  |
+| phantom-udt           | <span>yes</span>    | <span>yes</span>  | <span>yes</span>  |
+| phantom-autotables    | <span>x</span>      | <span>x</span>    | <span>x</span>    | 
+| phantom-graph         | <span>x</span>      | <span>x</span>    | <span>x</span>    |
+| phantom-spark         | <span>x</span>      | <span>x</span>    | <span>x</span>    |
 
 Using phantom
 =============
 
-### Scala 2.10 and 2.11 releases ###
+### Scala 2.10, 2.11 and 2.12 releases ###
 
 We publish phantom in 2 formats, stable releases and bleeding edge.
 
 - The stable release is always available on Maven Central and will be indicated by the badge at the top of this readme. The Maven Central badge is pointing at the latest version
 
-- Intermediary releases are available through our managed Bintray repository available at `https://dl.bintray.com/websudos/oss-releases/`. The latest version available on our Bintray repository is indicated by the Bintray badge at the top of this readme.
+- Intermediary releases are available through our OSS Bintray repo available at `Resolver.bintrayRepo("outworkers", "oss-releases")` or `https://dl.bintray.com/outworkers/oss-releases/`. The latest version available on our Bintray repository is indicated by the Bintray badge at the top of this readme.
 
+### How phantom compares
+
+To compare phantom to similar tools in the Scala/Cassandra category, you can read more [here](https://github.com/outworkers/phantom/blob/develop/comparison.md).
 
 ### Latest versions
 
 The latest versions are available here. The badges automatically update when a new version is released.
 
-- Latest stable version: [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.websudos/phantom-dsl_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.websudos/phantom-dsl_2.11) (Maven Central)
-- Bleeding edge: [![Bintray](https://api.bintray.com/packages/websudos/oss-releases/phantom/images/download.svg) ](https://bintray.com/websudos/oss-releases/phantom/_latestVersion) (Websudos OSS releases on Bintray)
+- Latest stable version: [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.outworkers/phantom-dsl_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.outworkers/phantom-dsl_2.11) (Maven Central)
+- Bleeding edge: [![Bintray](https://api.bintray.com/packages/outworkers/oss-releases/phantom-dsl/images/download.svg)](https://bintray.com/outworkers/oss-releases/phantom-dsl/_latestVersion) (OSS releases on Bintray)
 
 <a id="learning-phantom">Tutorials on phantom and Cassandra</a>
 ======================================================================
@@ -69,40 +111,36 @@ We are very happy to help implement missing features in phantom, answer question
 Adopters
 ========
 
-This is a list of companies that have embraced phantom as part of their technology stack and using it in production environments.
+Here are a few of the biggest phantom adopters, though the full list is far more comprehensive.
 
-- [CreditSuisse](https://www.credit-suisse.com/global/en/)
-- [ING](http://www.ing.com/en.htm)
-- [Wincor Nixdorf](http://www.wincor-nixdorf.com/internet/site_EN/EN/Home/homepage_node.html)
-- [Paddy Power](http://www.paddypower.com/)
-- [Mobli](https://www.mobli.com/)
-- [Pellucid Analytics](http://www.pellucid.com/)
-- [Equens](http://www.equens.com/)
-- [outworkers](https://www.outworkers.com/)
-- [VictorOps](http://www.victorops.com/)
-- [Socrata](http://www.socrata.com)
-- [Sphonic](http://www.sphonic.com/)
-- [Anomaly42](http://www.anomaly42.com/)
-- [Tecsisa](http://www.tecsisa.com/en/)
-- [Tuplejump](http://www.tuplejump.com/)
-- [FiloDB](http://www.github.com/tuplejump/FiloDB) - the fast analytics database built on Cassandra and Spark
-- [Chartboost](https://www.chartboost.com)
-
+![Starbucks](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/starbucks.png "Starbucks")
+![CreditSuisse](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/creditsuisse.png "CreditSuisse")
+![ING](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/ing.png "ING")
+![UBS](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/ubs.png "UBS")
+![Wincor Nixdorf](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/wincornixdorf.png "Wincor Nixdorf")
+![Paddy Power](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/paddypower.png "Paddy Power")
+![Strava](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/strava.png "Strava")
+![Equens](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/equens.png "Equens")
+![Pellucid Analytics](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/pellucid.png "Pellucid Analytics")
+![Anomaly42](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/anomaly42.png "Anomaly42")
+![ChartBoost](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/chartboost.png "Chartboost")
+![Tecsisa](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/tecsisa.png "Tecsisa")
+![Mobli](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/mobli.png "Mobli")
+![VictorOps](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/victorops.png "Mobli")
+![Socrata](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/socrata.png "Socrata")
+![Sphonic](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/sphonic.png "Sphonic")
+![Microsoft](https://s3-eu-west-1.amazonaws.com/websudos/oss/adopters/microsoft.png "Microsoft")
 
 License and copyright
 ======================
 
-Phantom is [freeware software](https://en.wikipedia.org/wiki/Freeware) and uses a proprietary license that in plain English says the following:
+Phantom is distributed under the Apache V2 License.
 
-- Phantom is the intellectual property of `Outworkers`, it is not provided under an OSS license.
+- `Outworkers, Limited` is the copyright holder.
 
-- You can use phantom in commercial products or otherwise, so long as you use one of the official versions available on Bintray or Maven Central.
+- You can use phantom in commercial products or otherwise.
 
-- You are not allowed to distribute altered copies of phantom in binary form.
-
-- You cannot offer paid for training on phantom unless you are a direct partner to `Outworkers` and you have a written intellectual property agreement in place with us.
-
-- If you simply have a `Build.scala` or `build.sbt` dependency on phantom, you have nothing to worry about.
+- We strongly appreciate and encourage contributions.
 
 - All paid for features are published and sold separately as `phantom-pro`, everything that is currently available for free will remain so forever.
 
@@ -112,8 +150,7 @@ If you would like our help with any new content or initiatives, we'd love to hea
 =====================================
 <a href="#table-of-contents">back to top</a>
 
-Phantom was developed at outworkers as an in-house project. All Cassandra integration at outworkers goes through phantom, and nowadays it's safe to say most
-Scala/Cassandra users in the world rely on phantom.
+Phantom was developed at outworkers as an in-house project. All Cassandra integration at outworkers goes through phantom, and nowadays it's safe to say most Scala/Cassandra users in the world rely on phantom.
 
 * Flavian Alexandru ([@alexflav23](https://github.com/alexflav23)) - maintainer
 * Bartosz Jankiewicz ([@bjankie1](https://github.com/bjankie1))
@@ -125,7 +162,7 @@ Scala/Cassandra users in the world rely on phantom.
 * Juan José Vázquez ([@juanjovazquez](https://github.com/juanjovazquez))
 * Viktor Taranenko ([@viktortnk](https://github.com/viktortnk))
 * Stephen Samuel ([@sksamuel](https://github.com/sksamuel))
-* Evan Chan ([@evanfchan](https://github.com/evanfchan))
+* Evan Chan ([@evanfchan](https://github.com/velvia))
 * Jens Halm ([@jenshalm](https://github.com/jenshalm))
 * Donovan Levinson ([@levinson](https://github.com/levinson))
 
@@ -135,7 +172,7 @@ Scala/Cassandra users in the world rely on phantom.
 
 Special thanks to Viktor Taranenko from WhiskLabs, who gave us the original idea.
 
-Copyright &copy; 2013 - 2016 outworkers.
+Copyright &copy; 2013 - 2017 outworkers.
 
 Contributing to phantom
 =======================

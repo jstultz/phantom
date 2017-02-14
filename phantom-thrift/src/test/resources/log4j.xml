@@ -15,10 +15,6 @@
         <level value="error" />
     </logger>
 
-    <logger name="com.websudos.phantom.zookeeper">
-        <level value="info" />
-    </logger>
-
     <logger name="com.datastax.driver.core">
         <level value="error" />
     </logger>
@@ -27,7 +23,7 @@
         <level value="error" />
     </logger>
 
-    <logger name="com.websudos.phantom">
+    <logger name="com.outworkers.phantom">
         <level value="info"/>
     </logger>
 
