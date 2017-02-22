@@ -39,6 +39,7 @@ lazy val Versions = new {
   val scalamock = "3.4.2"
   val macrocompat = "1.1.1"
   val macroParadise = "2.1.0"
+  val spire = "0.13.0"
 
   val twitterUtil: String => String = {
     s => CrossVersion.partialVersion(s) match {
@@ -146,6 +147,7 @@ lazy val baseProjectList: Seq[ProjectReference] = Seq(
   phantomExample,
   phantomConnectors,
   phantomFinagle,
+  phantomSpire,
   phantomStreams,
   phantomThrift
 )
@@ -165,7 +167,9 @@ lazy val phantom = (project in file("."))
     pgpPassphrase := Publishing.pgpPass
   ).aggregate(
     fullProjectList: _*
-  ).enablePlugins(CrossPerProjectPlugin)
+  ).enablePlugins(
+    CrossPerProjectPlugin
+  )
 
 lazy val phantomDsl = (project in file("phantom-dsl")).configs(
   PerformanceTest
@@ -306,6 +310,17 @@ lazy val phantomStreams = (project in file("phantom-streams"))
   ).dependsOn(
     phantomDsl % "compile->compile;test->test"
   ).enablePlugins(CrossPerProjectPlugin)
+
+lazy val phantomSpire = (project in file("phantom-spire"))
+    .settings(
+      name := "phantom-spire",
+      crossScalaVersions := Seq("2.10.6", "2.11.8"),
+      libraryDependencies ++= Seq(
+        "org.spire-math" %% "spire" % Versions.spire
+      )
+    ).dependsOn(
+      phantomDsl
+    )
 
 lazy val phantomExample = (project in file("phantom-example"))
   .settings(
