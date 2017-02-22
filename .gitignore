@@ -18,6 +18,7 @@ stats
 # Java heap dump files
 java_pid*
 
+_config.yml
 
 # InteliJ IDEA
 *.iml
