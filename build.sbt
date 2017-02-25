@@ -312,15 +312,15 @@ lazy val phantomStreams = (project in file("phantom-streams"))
   ).enablePlugins(CrossPerProjectPlugin)
 
 lazy val phantomSpire = (project in file("phantom-spire"))
-    .settings(
-      name := "phantom-spire",
-      crossScalaVersions := Seq("2.10.6", "2.11.8"),
-      libraryDependencies ++= Seq(
-        "org.spire-math" %% "spire" % Versions.spire
-      )
-    ).dependsOn(
-      phantomDsl
+  .settings(
+    name := "phantom-spire",
+    crossScalaVersions := Seq("2.10.6", "2.11.8"),
+    libraryDependencies ++= Seq(
+      "org.spire-math" %% "spire" % Versions.spire
     )
+  ).dependsOn(
+    phantomDsl
+  )
 
 lazy val phantomExample = (project in file("phantom-example"))
   .settings(
