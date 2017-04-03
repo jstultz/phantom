@@ -60,6 +60,12 @@ private[phantom] trait CassandraOperations extends SessionAugmenterImplicits {
     implicit session: Session,
     executor: ExecutionContextExecutor
   ): ScalaPromise[ResultSet] = {
+
+
+    def log(stast: BoundStatement) = {
+      stast.toString
+    }
+
     Manager.logger.debug(s"Executing query: $st")
 
     val promise = ScalaPromise[ResultSet]()
