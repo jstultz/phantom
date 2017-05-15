@@ -17,6 +17,8 @@ package com.outworkers.phantom.tables
 
 import com.outworkers.phantom.dsl._
 
+import scala.concurrent.Future
+
 case class WideRow(
   id: UUID,
   field: String,
@@ -65,6 +67,23 @@ abstract class WideTable extends CassandraTable[WideTable, WideRow] with RootCon
   object field18 extends StringColumn(this)
   object field19 extends StringColumn(this)
   object field20 extends StringColumn(this)
+}
+
+case class User(id: UUID, name: String)
+
+abstract class Users extends CassandraTable[Users, User] with RootConnector {
+  object id extends UUIDColumn(this) with PartitionKey
+  object name extends StringColumn(this)
+
+  def save(user: User): Future[ResultSet] = {
+    store(user)
+      .consistencyLevel_=(ConsistencyLevel.ALL)
+      .future()
+  }
+
+  def getById(id: UUID): Future[Option[User]] = {
+    select.where(_.id eqs id).one()
+  }
 }
 
 
